@@ -126,7 +126,7 @@
         <p>Hey <span class="accent" id="herName">babe</span>, I made this for you.</p>
 
         <div class="media">
-          <img id="askGif" alt="Cute gif" />
+          <img id="slideshowAsk" alt="Photos of us" />
         </div>
 
         <div class="btns">
@@ -186,7 +186,36 @@
         // Replace this later if you want a different crying gif:
         no: "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
       },
+// ❤️ Slideshow Photos (Your Actual Uploaded Files)
+const askSlideshowImages = [
+  "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
+  "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
+  "DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
+  "DSCF0006.jpeg",
+  "DSCF0007.jpeg",
+  "IMG_0233.jpeg",
+  "IMG_0411.jpeg",
+  "IMG_0418.jpeg",
+  "IMG_0420.jpeg",
+  "IMG_4002.jpeg",
+  "IMG_4288.jpeg",
+  "IMG_5482.jpeg",
+  "IMG_6404.jpeg",
+  "IMG_9470.jpeg"
+];
 
+let askSlideIndex = 0;
+const askImgEl = document.getElementById("slideshowAsk");
+
+// Start slideshow
+askImgEl.src = askSlideshowImages[0];
+
+// Change every 3 seconds
+setInterval(() => {
+  askSlideIndex = (askSlideIndex + 1) % askSlideshowImages.length;
+  askImgEl.src = askSlideshowImages[askSlideIndex];
+}, 3000);
+    
       yesLine: "YESSSS 😭❤️",
       noLine: "Damn… I’m hurt 😔",
 
