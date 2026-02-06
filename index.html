@@ -173,53 +173,15 @@
   </div>
 
   <script>
-    const config = {
-      herName: "Shella",
-
-      gifs: {
-        // Flowers gif you found earlier:
-        ask: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExd25zdDVxNWFveDhpZHR3NW1hNTU5aDM3N24zdTR3aTJ6Z2FqcndzeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvYNSqBAMDVx8CEYkt/giphy.gif",
-
-        // ✅ The YES gif you just sent:
-        yes: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif",
-
-        // Replace this later if you want a different crying gif:
-        no: "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
-      },
-// ❤️ Slideshow Photos (Your Actual Uploaded Files)
-const askSlideshowImages = [
-  "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
-  "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
-  "DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
-  "DSCF0006.jpeg",
-  "DSCF0007.jpeg",
-  "IMG_0233.jpeg",
-  "IMG_0411.jpeg",
-  "IMG_0418.jpeg",
-  "IMG_0420.jpeg",
-  "IMG_4002.jpeg",
-  "IMG_4288.jpeg",
-  "IMG_5482.jpeg",
-  "IMG_6404.jpeg",
-  "IMG_9470.jpeg"
-];
-
-let askSlideIndex = 0;
-const askImgEl = document.getElementById("slideshowAsk");
-
-// Start slideshow
-askImgEl.src = askSlideshowImages[0];
-
-// Change every 3 seconds
-setInterval(() => {
-  askSlideIndex = (askSlideIndex + 1) % askSlideshowImages.length;
-  askImgEl.src = askSlideshowImages[askSlideIndex];
-}, 3000);
-    
-      yesLine: "YESSSS 😭❤️",
-      noLine: "Damn… I’m hurt 😔",
-
-      heartfeltMessage:
+  const config = {
+    herName: "Shella",
+    gifs: {
+      yes: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif",
+      no: "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
+    },
+    yesLine: "YESSSS 😭❤️",
+    noLine: "Damn… I’m hurt 😔",
+    heartfeltMessage:
 `Shella, I love you so much.
 I’m really thankful for you.
 
@@ -228,16 +190,45 @@ I’ve been trying my hardest to keep up and it’s been hard, but you’ve stil
 This is a hard time for me with everything going on, but you make it feel lighter just by being you.
 
 I can’t wait to live life with you and be happy. 💖`
-    };
+  };
 
+  // ❤️ Slideshow Photos (Your Uploaded Files)
+  const askSlideshowImages = [
+    "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
+    "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
+    "DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
+    "DSCF0006.jpeg",
+    "DSCF0007.jpeg",
+    "IMG_0233.jpeg",
+    "IMG_0411.jpeg",
+    "IMG_0418.jpeg",
+    "IMG_0420.jpeg",
+    "IMG_4002.jpeg",
+    "IMG_4288.jpeg",
+    "IMG_5482.jpeg",
+    "IMG_6404.jpeg",
+    "IMG_9470.jpeg"
+  ];
+
+  // Wait until the page is loaded so the image exists
+  window.addEventListener("DOMContentLoaded", () => {
     document.getElementById("herName").textContent = config.herName;
-    document.getElementById("askGif").src = config.gifs.ask;
     document.getElementById("yesGif").src = config.gifs.yes;
     document.getElementById("noGif").src = config.gifs.no;
 
     document.getElementById("yesLine").textContent = config.yesLine;
     document.getElementById("noLine").textContent = config.noLine;
     document.getElementById("heartfelt").textContent = config.heartfeltMessage;
+
+    // ✅ Slideshow setup
+    const askImgEl = document.getElementById("slideshowAsk");
+    let askSlideIndex = 0;
+    askImgEl.src = askSlideshowImages[0];
+
+    setInterval(() => {
+      askSlideIndex = (askSlideIndex + 1) % askSlideshowImages.length;
+      askImgEl.src = askSlideshowImages[askSlideIndex];
+    }, 3000);
 
     const screens = {
       ask: document.getElementById("ask"),
@@ -317,6 +308,7 @@ I can’t wait to live life with you and be happy. 💖`
       clearInterval(heartTimer);
       heartTimer = null;
     }
-  </script>
+  });
+</script>
 </body>
 </html> 
