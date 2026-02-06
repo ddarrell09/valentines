@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Will you be my Valentine? ❤️</title>
+  <style>
+    :root{
+      --bg1:#0b0b14; --bg2:#1b0f1a;
+      --glass: rgba(255,255,255,.07);
+      --border: rgba(255,255,255,.14);
+      --pink:#ff4d8d;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh; color:#fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 800px at 15% 10%, #2a1230 0%, transparent 60%),
+        radial-gradient(900px 600px at 85% 30%, #1d2a55 0%, transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow:hidden;
+    }
+    .wrap{
+      position:relative;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      min-height:100vh;
+      padding:24px;
+      text-align:center;
+    }
+    .card{
+      width:min(640px, 94vw);
+      padding:24px 18px;
+      border-radius:22px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 20px 90px rgba(0,0,0,.35);
+    }
+    h1{margin:0 0 10px; font-size:clamp(26px, 5vw, 44px)}
+    p{margin:0; line-height:1.6; color:rgba(255,255,255,.92)}
+    .media{
+      margin:14px auto 16px;
+      width:min(520px, 92vw);
+      border-radius:18px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+    .media img{
+      width:100%;
+      display:block;
+      max-height:320px;
+      object-fit:cover;
+    }
+    .btns{
+      display:flex; gap:12px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    button{
+      border:0; cursor:pointer;
+      padding:12px 18px;
+      border-radius:999px;
+      font-weight:800;
+      transition: transform .08s ease, filter .2s ease;
+      user-select:none;
+    }
+    button:active{transform:translateY(1px) scale(.99)}
+    .yes{
+      background: linear-gradient(90deg, #ff3d7f, #ff7ab6);
+      color:#1b0f1a;
+      box-shadow: 0 14px 35px rgba(255,77,141,.25);
+    }
+    .no{
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+    }
+    .no:hover{filter:brightness(1.12)}
+    .small{
+      margin-top:12px;
+      font-size:12px;
+      color: rgba(255,255,255,.65);
+    }
+
+    .screen{display:none}
+    .screen.active{display:block}
+
+    .heart{
+      position:fixed;
+      top:-40px;
+      pointer-events:none;
+      z-index:1;
+      opacity:.95;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.25));
+      animation: fall linear forwards;
+    }
+    @keyframes fall{
+      to{ transform: translate(var(--drift), 110vh) rotate(360deg); opacity:.15; }
+    }
+
+    .accent{color:var(--pink); font-weight:900}
+
+    /* make message look nice */
+    .message{
+      margin-top:14px;
+      padding:14px 14px;
+      border-radius:16px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      text-align:left;
+      white-space:pre-line; /* allows line breaks */
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+
+      <section id="ask" class="screen active">
+        <h1>Will you be my Valentine? 💌</h1>
+        <p>Hey <span class="accent" id="herName">babe</span>, I made this for you.</p>
+
+        <div class="media">
+          <img id="askGif" alt="Cute gif" />
+        </div>
+
+        <div class="btns">
+          <button class="yes" id="yesBtn">Yes ❤️</button>
+          <button class="no" id="noBtn">No 😭</button>
+        </div>
+
+        <div class="small">P.S. both buttons work 😌</div>
+      </section>
+
+      <section id="yes" class="screen">
+        <h1>YAYYYYY 💖💖💖</h1>
+        <p id="yesLine">You just made me the happiest person 😭❤️</p>
+
+        <div class="media">
+          <img id="yesGif" alt="Happy gif" />
+        </div>
+
+        <div class="message" id="heartfelt"></div>
+
+        <div class="btns">
+          <button class="yes" id="moreHearts">More hearts</button>
+          <button class="no" id="backHome1">Back</button>
+        </div>
+
+        <div class="small">Look up 👆</div>
+      </section>
+
+      <section id="no" class="screen">
+        <h1>Dang… 🥲</h1>
+        <p id="noLine">I’m gonna go cry real quick.</p>
+
+        <div class="media">
+          <img id="noGif" alt="Sad gif" />
+        </div>
+
+        <div class="btns">
+          <button class="yes" id="changeMind">Okay okay… YES ❤️</button>
+          <button class="no" id="backHome2">Back</button>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script>
+    const config = {
+      herName: "Shella",
+
+      gifs: {
+        // Flowers gif you found earlier:
+        ask: "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExd25zdDVxNWFveDhpZHR3NW1hNTU5aDM3N24zdTR3aTJ6Z2FqcndzeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/wvYNSqBAMDVx8CEYkt/giphy.gif",
+
+        // ✅ The YES gif you just sent:
+        yes: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif",
+
+        // Replace this later if you want a different crying gif:
+        no: "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
+      },
+
+      yesLine: "YESSSS 😭❤️",
+      noLine: "Damn… I’m hurt 😔",
+
+      heartfeltMessage:
+`Shella, I love you so much.
+I’m really thankful for you.
+
+I’ve been trying my hardest to keep up and it’s been hard, but you’ve still been right here with me — especially when I’m at my lowest. I love you for that.
+
+This is a hard time for me with everything going on, but you make it feel lighter just by being you.
+
+I can’t wait to live life with you and be happy. 💖`
+    };
+
+    document.getElementById("herName").textContent = config.herName;
+    document.getElementById("askGif").src = config.gifs.ask;
+    document.getElementById("yesGif").src = config.gifs.yes;
+    document.getElementById("noGif").src = config.gifs.no;
+
+    document.getElementById("yesLine").textContent = config.yesLine;
+    document.getElementById("noLine").textContent = config.noLine;
+    document.getElementById("heartfelt").textContent = config.heartfeltMessage;
+
+    const screens = {
+      ask: document.getElementById("ask"),
+      yes: document.getElementById("yes"),
+      no: document.getElementById("no"),
+    };
+
+    function show(screen){
+      Object.values(screens).forEach(s => s.classList.remove("active"));
+      screens[screen].classList.add("active");
+    }
+
+    document.getElementById("yesBtn").onclick = () => {
+      show("yes");
+      startHearts();
+      burstHearts(45);
+    };
+
+    document.getElementById("noBtn").onclick = () => {
+      show("no");
+      stopHearts();
+    };
+
+    document.getElementById("backHome1").onclick = () => {
+      show("ask");
+      stopHearts();
+    };
+
+    document.getElementById("backHome2").onclick = () => {
+      show("ask");
+      stopHearts();
+    };
+
+    document.getElementById("changeMind").onclick = () => {
+      show("yes");
+      startHearts();
+      burstHearts(45);
+    };
+
+    document.getElementById("moreHearts").onclick = () => burstHearts(35);
+
+    const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
+    let heartTimer = null;
+
+    function spawnHeart(){
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+      const left = Math.random()*100;
+      const size = 12 + Math.random()*26;
+      const drift = (Math.random()*140 - 70) + "px";
+      const duration = 4 + Math.random()*4;
+
+      heart.style.left = left + "vw";
+      heart.style.fontSize = size + "px";
+      heart.style.setProperty("--drift", drift);
+      heart.style.animationDuration = duration + "s";
+
+      document.body.appendChild(heart);
+      setTimeout(()=>heart.remove(), duration*1000);
+    }
+
+    function burstHearts(count=24){
+      for(let i=0;i<count;i++){
+        setTimeout(spawnHeart, i*55);
+      }
+    }
+
+    function startHearts(){
+      if(heartTimer) return;
+      heartTimer = setInterval(spawnHeart, 180);
+    }
+
+    function stopHearts(){
+      if(!heartTimer) return;
+      clearInterval(heartTimer);
+      heartTimer = null;
+    }
+  </script>
+</body>
+</html> 
