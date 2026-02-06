@@ -2,362 +2,683 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
+  <!-- ✅ correct for iPhone + not “cut off” on right -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
-  <title>Will you be my Valentine ❤️</title>
+  <title>Will you be my Valentine? ❤️</title>
 
   <style>
     :root{
-      --bg1:#0b0b14;
-      --bg2:#1b0f1a;
+      --bg1:#0b0b14; --bg2:#1b0f1a;
       --glass: rgba(255,255,255,.07);
       --border: rgba(255,255,255,.14);
       --pink:#ff4d8d;
+      --text: rgba(255,255,255,.92);
     }
 
     *{ box-sizing:border-box; }
 
-    html, body{
+    html,body{
       margin:0;
       width:100%;
-      overflow-x:hidden; /* hard kill sideways scroll */
+      height:100%;
+      overflow-x:hidden;           /* ✅ no sideways scroll */
+      background:#000;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#fff;
     }
 
     body{
       min-height:100vh;
+      min-height:100svh;
+      padding:
+        calc(env(safe-area-inset-top) + 14px)
+        calc(env(safe-area-inset-right) + 14px)
+        calc(env(safe-area-inset-bottom) + 18px)
+        calc(env(safe-area-inset-left) + 14px);
       background:
         radial-gradient(1200px 800px at 15% 10%, #2a1230 0%, transparent 60%),
         radial-gradient(900px 600px at 85% 30%, #1d2a55 0%, transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow-y:auto;
     }
 
-    /* ===== BACKGROUND HEARTS LAYER ===== */
-    .bg-hearts{
+    /* ====== BACKDROP HEARTS (behind everything) ====== */
+    #bgHearts{
       position:fixed;
       inset:0;
       pointer-events:none;
       z-index:0;
       overflow:hidden;
     }
+    .bgHeart{
+      position:absolute;
+      top:-40px;
+      opacity:.22;
+      filter: blur(.2px);
+      animation: bgFall linear forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes bgFall{
+      to{
+        transform: translate(var(--drift), 115vh) rotate(360deg);
+        opacity:.05;
+      }
+    }
 
-    /* wrapper + card above the background hearts */
+    /* ====== WRAP/CARD ====== */
     .wrap{
       position:relative;
       z-index:2;
-
       width:100%;
-      min-height:100svh;
+      max-width:680px;
+      margin:0 auto;
       display:flex;
       justify-content:center;
-      align-items:flex-start;
-
-      padding-top:28px;
-      padding-bottom:24px;
-
-      /* ✅ symmetric padding that survives Safari weirdness */
-      padding-left: max(18px, calc(18px + env(safe-area-inset-left)));
-      padding-right:max(18px, calc(18px + env(safe-area-inset-right)));
-
-      /* older iOS fallback */
-      padding-left: max(18px, calc(18px + constant(safe-area-inset-left)));
-      padding-right:max(18px, calc(18px + constant(safe-area-inset-right)));
     }
 
     .card{
       width:100%;
-      max-width:640px;
-      margin-inline:auto;     /* ✅ true center */
-      padding:22px 16px;
       border-radius:22px;
-
       background: var(--glass);
       border: 1px solid var(--border);
       backdrop-filter: blur(12px);
       box-shadow: 0 20px 90px rgba(0,0,0,.35);
-
-      overflow:hidden;        /* no inner scrollbars */
-      text-align:center;
+      overflow:hidden;         /* ✅ no inner scrollbars */
+      text-align:center;       /* ✅ centers title + hey line */
     }
 
-    h1{ margin:0 0 10px; font-size:clamp(24px, 5vw, 40px); }
-    p{ margin:0; line-height:1.5; }
+    .pad{
+      padding:20px 16px;
+    }
 
+    h1{
+      margin:0 0 10px;
+      font-size: clamp(22px, 6vw, 40px);
+      line-height:1.15;
+      letter-spacing:.2px;
+    }
+    p{
+      margin:0;
+      line-height:1.55;
+      color:var(--text);
+    }
+    .accent{ color:var(--pink); font-weight:900; }
+
+    /* ====== MEDIA ====== */
     .media{
-      margin:14px auto 16px;
-      width:100%;
-      max-width:520px;
+      margin:14px auto 10px;
+      width: min(540px, 92vw);
       border-radius:18px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.18);
     }
-
     .media img{
       width:100%;
       height:auto;
-      max-height:65vh;
-      object-fit:contain;
+      max-height: 58vh;        /* ✅ fits most phones */
+      object-fit: contain;     /* ✅ never crops */
       display:block;
       background: rgba(0,0,0,.25);
     }
+    .caption{
+      margin: 8px auto 0;
+      width:min(540px, 92vw);
+      font-size:13px;
+      color: rgba(255,255,255,.75);
+    }
 
+    /* ====== BUTTONS ====== */
     .btns{
       display:flex;
       gap:12px;
       justify-content:center;
       flex-wrap:wrap;
-      margin-top:16px;
+      margin-top:14px;
     }
-
     button{
-      border:none;
+      border:0;
       cursor:pointer;
       padding:12px 18px;
       border-radius:999px;
       font-weight:800;
+      transition: transform .08s ease, filter .2s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
-
+    button:active{ transform: translateY(1px) scale(.99); }
     .yes{
       background: linear-gradient(90deg, #ff3d7f, #ff7ab6);
       color:#1b0f1a;
+      box-shadow: 0 14px 35px rgba(255,77,141,.25);
     }
-
     .no{
       background: rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.18);
       color:#fff;
     }
 
+    .small{
+      margin-top:10px;
+      font-size:12px;
+      color: rgba(255,255,255,.65);
+    }
+
+    .topRow{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    /* ====== SCREENS ====== */
     .screen{ display:none; }
     .screen.active{ display:block; }
 
-    /* ===== FOREGROUND HEARTS (burst over everything) ===== */
+    /* ====== MESSAGE BOX ====== */
+    .message{
+      margin:14px auto 0;
+      padding:14px;
+      border-radius:16px;
+      width:min(540px, 92vw);
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.12);
+      text-align:left;
+      white-space:pre-line;
+    }
+
+    /* ====== POLAROID GALLERY (side scroll) ====== */
+    .galleryWrap{
+      margin:14px auto 0;
+      width:min(560px, 94vw);
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom:10px;
+      scrollbar-width: none;
+    }
+    .galleryWrap::-webkit-scrollbar{ display:none; }
+
+    .gallery{
+      display:flex;
+      gap:12px;
+      padding:8px 2px;
+      width:max-content;
+    }
+
+    .polaroid{
+      width: 190px;
+      background: rgba(255,255,255,.92);
+      border-radius:14px;
+      padding:10px 10px 12px;
+      color:#111;
+      box-shadow: 0 14px 30px rgba(0,0,0,.28);
+      transform: rotate(var(--tilt));
+      flex: 0 0 auto;
+    }
+    .polaroid img{
+      width:100%;
+      height: 170px;
+      object-fit: cover;
+      border-radius:10px;
+      display:block;
+      background:#ddd;
+    }
+    .polText{
+      margin-top:10px;
+      font-weight:700;
+      font-size:13px;
+      line-height:1.2;
+      text-align:center;
+      color:#222;
+    }
+
+    /* ====== FOREGROUND HEARTS (burst + “more hearts”) ====== */
     .heart{
       position:fixed;
       top:-40px;
       pointer-events:none;
-      z-index:9999; /* OVER EVERYTHING */
+      z-index:9999; /* ✅ over everything */
+      opacity:.95;
+      filter: drop-shadow(0 8px 14px rgba(0,0,0,.25));
       animation: fall linear forwards;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+      will-change: transform, opacity;
     }
-
-    /* ===== BACKGROUND HEARTS (behind everything) ===== */
-    .bg-heart{
-      position:absolute;
-      top:-50px;
-      pointer-events:none;
-      z-index:0;
-      opacity:.22;
-      animation: fall linear forwards;
-      filter: blur(.2px);
-    }
-
     @keyframes fall{
-      to{ transform: translateY(115vh) rotate(360deg); opacity:0; }
+      to{
+        transform: translate(var(--drift), 115vh) rotate(360deg);
+        opacity:.15;
+      }
     }
 
-    .message{
-      margin-top:14px;
+    /* ====== PASSWORD SCREEN ====== */
+    .lockTitle{ margin-bottom:6px; }
+    .lockBox{
+      margin:14px auto 0;
+      width:min(520px, 92vw);
       padding:14px;
       border-radius:16px;
       background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.12);
-      white-space:pre-line;
+      border: 1px solid rgba(255,255,255,.12);
       text-align:left;
     }
+    .lockRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    input{
+      flex:1;
+      min-width:180px;
+      padding:12px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.08);
+      color:#fff;
+      outline:none;
+      font-size:16px;
+    }
+    .err{
+      margin-top:10px;
+      font-size:13px;
+      color: rgba(255,160,180,.92);
+      display:none;
+    }
 
-    @media (max-width:600px){
-      .wrap{ padding-top:22px; padding-bottom:18px; }
-      .card{ padding:18px 14px; }
-      button{ font-size:14px; padding:10px 16px; }
-      .media img{ max-height:60vh; }
+    @media (max-width: 420px){
+      .pad{ padding:18px 14px; }
+      button{ padding:11px 16px; font-size:14px; }
+      .media img{ max-height: 54vh; }
+      .polaroid{ width: 170px; }
+      .polaroid img{ height: 155px; }
     }
   </style>
 </head>
 
 <body>
-
-  <!-- background hearts container -->
-  <div class="bg-hearts" id="bgHearts"></div>
+  <!-- ✅ BACKDROP HEARTS -->
+  <div id="bgHearts"></div>
 
   <div class="wrap">
     <div class="card">
+      <div class="pad">
 
-      <section id="ask" class="screen active">
-        <h1>Will you be my Valentine? 💌</h1>
-        <p>Hey <span style="color:var(--pink);font-weight:900;">Shella</span>, I made this for you.</p>
+        <!-- ===== LOCK SCREEN ===== -->
+        <section id="lock" class="screen active">
+          <h1 class="lockTitle">One second… 🔒</h1>
+          <p>Little private page for <span class="accent">Shella</span> only.</p>
 
-        <div class="media">
-          <img id="slideshowAsk" alt="Photos of us">
-        </div>
+          <div class="lockBox">
+            <p style="margin:0;color:rgba(255,255,255,.86)">Password:</p>
+            <div class="lockRow">
+              <input id="pw" type="password" placeholder="type it…" autocomplete="off" />
+              <button class="yes" id="unlockBtn">Unlock</button>
+            </div>
+            <div class="err" id="pwErr">Nahhh that’s not it 😭 try again</div>
+          </div>
 
-        <div class="btns">
-          <button class="yes" id="yesBtn">Yes ❤️</button>
-          <button class="no" id="noBtn">No 😭</button>
-        </div>
-      </section>
+          <div class="small">hint: 🍇</div>
+        </section>
 
-      <section id="yes" class="screen">
-        <h1>YAYYYYY 💖</h1>
-        <p>YESSSS 😭❤️</p>
+        <!-- ===== ASK SCREEN ===== -->
+        <section id="ask" class="screen">
+          <h1>Will you be my Valentine? 💌</h1>
+          <p>Hey <span class="accent" id="herName">Shella</span>, I made this for you.</p>
 
-        <div class="media">
-          <img id="yesGif" alt="Happy gif">
-        </div>
+          <div class="media">
+            <img id="slideshowAsk" alt="Photos of us"/>
+          </div>
+          <div class="caption" id="slideCap"></div>
 
-        <div class="message">
-Shella, I love you so much.
+          <div class="topRow">
+            <button class="no" id="musicBtn">Play / Pause Music 🎶</button>
+          </div>
+
+          <div class="btns">
+            <button class="yes" id="yesBtn">Yes ❤️</button>
+            <button class="no" id="noBtn">No 😭</button>
+          </div>
+
+          <div class="small">P.S. both buttons work 😌</div>
+        </section>
+
+        <!-- ===== YES SCREEN ===== -->
+        <section id="yes" class="screen">
+          <h1>YAYYYYY 💖💖💖</h1>
+          <p style="color:rgba(255,255,255,.9)">Okay so boom… you stuck with me now 😭❤️</p>
+
+          <div class="media">
+            <img id="yesGif" alt="Happy gif"/>
+          </div>
+
+          <div class="message" id="heartfelt"></div>
+
+          <h2 style="margin:18px 0 6px;font-size:18px;color:rgba(255,255,255,.92)">Little timeline of us ➡️</h2>
+          <p style="margin:0 0 8px;color:rgba(255,255,255,.72);font-size:13px">Swipe sideways to see everything</p>
+
+          <div class="galleryWrap">
+            <div class="gallery" id="gallery"></div>
+          </div>
+
+          <div class="btns">
+            <button class="yes" id="moreHearts">More hearts</button>
+            <button class="no" id="backHome1">Back</button>
+          </div>
+
+          <div class="small">Look up 👆</div>
+        </section>
+
+        <!-- ===== NO SCREEN ===== -->
+        <section id="no" class="screen">
+          <h1>Dang… 🥲</h1>
+          <p>I’m gonna go cry real quick.</p>
+
+          <div class="media">
+            <img id="noGif" alt="Sad gif"/>
+          </div>
+
+          <div class="btns">
+            <button class="yes" id="changeMind">Okay okay… YES ❤️</button>
+            <button class="no" id="backHome2">Back</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ AUDIO (mp3 in your repo) -->
+  <audio id="bgMusic" loop>
+    <source src="love.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    /* =========================
+       CONFIG
+    ========================= */
+    const config = {
+      password: "grape",
+      herName: "Shella",
+
+      gifs: {
+        yes: "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif",
+        no:  "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
+      },
+
+      heartfeltMessage:
+`Shella, I love you so much.
 I’m really thankful for you.
 
 I’ve been trying my hardest to keep up and it’s been hard, but you’ve still been right here with me — especially when I’m at my lowest. I love you for that.
 
 This is a hard time for me with everything going on, but you make it feel lighter just by being you.
 
-I can’t wait to live life with you and be happy. 💖
-        </div>
+I can’t wait to live life with you and be happy. 💖`,
 
-        <div class="btns">
-          <button class="yes" id="moreHearts">More hearts</button>
-          <button class="no" id="backHome1">Back</button>
-        </div>
-      </section>
+      /* ✅ All repo photos + your captions */
+      photos: [
+        { file:"DSCF0007.jpeg", caption:"First time we saw each other" },
+        { file:"DSCF0006.JPG",  caption:"After a good time" },
+        { file:"IMG_9470.jpeg", caption:"Ocean Shores with you." },
+        { file:"EA46A468-EE3C-4890-AC72-702A6EC5D301.jpeg", caption:"Meow Wolf date." },
+        { file:"D7F95496-E1E9-4075-A1D7-50FCBE79FE26.jpeg", caption:"Us just enjoying each other’s company." },
 
-      <section id="no" class="screen">
-        <h1>Dang… 🥲</h1>
-        <p>I’m gonna go cry real quick.</p>
+        { file:"17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg", caption:"Our first hike together." },
+        { file:"9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg", caption:"Round1" },
+        { file:"DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg", caption:"Mid hot pot spot." },
+        { file:"EE48B53A-645D-44BC-9138-BD7BF6E4DD53.jpeg", caption:"First Hike" },
+        { file:"2350A5A0-4AF3-4A20-9E2D-6D80861C29BE.jpeg", caption:"Christmas lights date." },
 
-        <div class="media">
-          <img id="noGif" alt="Sad gif">
-        </div>
+        { file:"IMG_0233.jpeg", caption:"That scary hike 😂" },
 
-        <div class="btns">
-          <button class="yes" id="changeMind">Okay okay… YES ❤️</button>
-          <button class="no" id="backHome2">Back</button>
-        </div>
-      </section>
+        /* Seattle date set (you said “the rest is seattle date”) */
+        { file:"BA557A36-967D-4E1B-917A-EBB73CCED3C8.jpeg", caption:"Seattle date" },
+        { file:"021446D9-8B29-4195-9E19-E88224562CCE.jpeg", caption:"Seattle date" },
+        { file:"608FD86F-A67E-4556-810C-8E66749C2EF9.jpeg", caption:"Seattle date" }
+      ]
+    };
 
-    </div>
-  </div>
+    /* =========================
+       ELEMENTS
+    ========================= */
+    const screens = {
+      lock: document.getElementById("lock"),
+      ask:  document.getElementById("ask"),
+      yes:  document.getElementById("yes"),
+      no:   document.getElementById("no")
+    };
 
-<script>
-/* ===== SLIDESHOW (your uploaded images) ===== */
-const photos = [
-  "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
-  "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
-  "DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
-  "DSCF0006.jpeg",
-  "DSCF0007.jpeg",
-  "IMG_0233.jpeg",
-  "IMG_0411.jpeg",
-  "IMG_0418.jpeg",
-  "IMG_0420.jpeg",
-  "IMG_4002.jpeg",
-  "IMG_4288.jpeg",
-  "IMG_5482.jpeg",
-  "IMG_6404.jpeg",
-  "IMG_9470.jpeg"
-];
+    const herNameEl = document.getElementById("herName");
+    const slideImg  = document.getElementById("slideshowAsk");
+    const slideCap  = document.getElementById("slideCap");
+    const yesGif    = document.getElementById("yesGif");
+    const noGif     = document.getElementById("noGif");
+    const heartfelt = document.getElementById("heartfelt");
+    const gallery   = document.getElementById("gallery");
 
-const slideEl = document.getElementById("slideshowAsk");
-let slideIndex = 0;
-slideEl.src = photos[0];
+    const music     = document.getElementById("bgMusic");
 
-setInterval(() => {
-  slideIndex = (slideIndex + 1) % photos.length;
-  slideEl.src = photos[slideIndex];
-}, 3000);
+    /* =========================
+       HELPERS
+    ========================= */
+    function show(name){
+      Object.values(screens).forEach(s => s.classList.remove("active"));
+      screens[name].classList.add("active");
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }
 
-/* ===== GIFS ===== */
-document.getElementById("yesGif").src =
-  "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif";
+    function safePlayMusic(){
+      // iPhone Safari needs a user gesture – this function is only called from clicks
+      music.play().catch(()=>{});
+    }
 
-document.getElementById("noGif").src =
-  "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif";
+    /* =========================
+       INIT CONTENT
+    ========================= */
+    herNameEl.textContent = config.herName;
+    yesGif.src = config.gifs.yes;
+    noGif.src  = config.gifs.no;
+    heartfelt.textContent = config.heartfeltMessage;
 
-/* ===== SCREEN SWITCH ===== */
-const screens = {
-  ask: document.getElementById("ask"),
-  yes: document.getElementById("yes"),
-  no: document.getElementById("no")
-};
+    /* =========================
+       PASSWORD
+    ========================= */
+    const pwInput = document.getElementById("pw");
+    const pwErr   = document.getElementById("pwErr");
 
-function show(name){
-  Object.values(screens).forEach(s => s.classList.remove("active"));
-  screens[name].classList.add("active");
-}
+    function unlock(){
+      const val = (pwInput.value || "").trim().toLowerCase();
+      if(val === config.password){
+        pwErr.style.display = "none";
+        show("ask");
+        // optional: start music on unlock tap (still counts as gesture)
+        safePlayMusic();
+      }else{
+        pwErr.style.display = "block";
+      }
+    }
 
-/* ===== HEARTS ===== */
-const heartChars = ["💗","💖","💘","💝","💞","💕","❤️","🩷","🫶"];
-const bgContainer = document.getElementById("bgHearts");
+    document.getElementById("unlockBtn").onclick = unlock;
+    pwInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter") unlock();
+    });
 
-/* Foreground burst hearts (OVER everything) */
-function spawnHeartFG(){
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    /* =========================
+       SLIDESHOW (ASK SCREEN)
+    ========================= */
+    let slideIndex = 0;
+    const slides = config.photos.map(p => p.file);
 
-  h.style.left = (Math.random()*100) + "vw";
-  h.style.fontSize = (14 + Math.random()*28) + "px";
-  h.style.animationDuration = (4 + Math.random()*4) + "s";
+    function setSlide(i){
+      slideIndex = i;
+      slideImg.src = slides[slideIndex];
+      slideCap.textContent = config.photos[slideIndex].caption || "";
+    }
 
-  document.body.appendChild(h);
-  setTimeout(() => h.remove(), 9000);
-}
+    setSlide(0);
 
-function burstHearts(count=35){
-  for(let i=0;i<count;i++){
-    setTimeout(spawnHeartFG, i * 55);
-  }
-}
+    setInterval(() => {
+      // only run slideshow when ASK screen is visible
+      if(!screens.ask.classList.contains("active")) return;
+      const next = (slideIndex + 1) % slides.length;
+      setSlide(next);
+    }, 3200);
 
-/* Background hearts (BEHIND everything) */
-function spawnHeartBG(){
-  const h = document.createElement("div");
-  h.className = "bg-heart";
-  h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+    /* =========================
+       POLAROID GALLERY (YES SCREEN)
+    ========================= */
+    function buildGallery(){
+      gallery.innerHTML = "";
+      config.photos.forEach((p, idx) => {
+        const card = document.createElement("div");
+        card.className = "polaroid";
+        // tiny random tilt like the example
+        const tilt = ((idx % 2 === 0) ? -1 : 1) * (1.2 + Math.random()*1.8);
+        card.style.setProperty("--tilt", tilt.toFixed(2) + "deg");
 
-  // use percentages INSIDE bg container (more stable than vw on Safari)
-  h.style.left = (Math.random()*100) + "%";
-  h.style.fontSize = (10 + Math.random()*18) + "px";
-  h.style.animationDuration = (7 + Math.random()*8) + "s";
+        const img = document.createElement("img");
+        img.src = p.file;
+        img.alt = p.caption || "Photo";
 
-  // little sideways drift using translateX
-  const drift = (Math.random()*80 - 40);
-  h.style.transform = `translateX(${drift}px)`;
+        const t = document.createElement("div");
+        t.className = "polText";
+        t.textContent = p.caption || "";
 
-  bgContainer.appendChild(h);
-  setTimeout(() => h.remove(), 17000);
-}
+        card.appendChild(img);
+        card.appendChild(t);
+        gallery.appendChild(card);
+      });
+    }
+    buildGallery();
 
-/* constant background falling hearts */
-setInterval(spawnHeartBG, 380); // adjust speed here
+    /* =========================
+       MUSIC BUTTON
+    ========================= */
+    document.getElementById("musicBtn").onclick = () => {
+      if(music.paused){
+        safePlayMusic();
+      }else{
+        music.pause();
+      }
+    };
 
-/* ===== BUTTONS ===== */
-document.getElementById("yesBtn").onclick = () => {
-  show("yes");
-  burstHearts(45);
-};
+    /* =========================
+       BUTTONS / SCREENS
+    ========================= */
+    document.getElementById("yesBtn").onclick = () => {
+      show("yes");
+      safePlayMusic();
+      startBgHearts();       // keep backdrop hearts running
+      startHearts();         // foreground falling hearts on YES
+      burstHearts(55);       // extra shower
+    };
 
-document.getElementById("noBtn").onclick = () => {
-  show("no");
-};
+    document.getElementById("noBtn").onclick = () => {
+      show("no");
+      stopHearts();
+      startBgHearts();
+    };
 
-document.getElementById("moreHearts").onclick = () => burstHearts(40);
+    document.getElementById("backHome1").onclick = () => {
+      show("ask");
+      stopHearts();
+      startBgHearts();
+    };
 
-document.getElementById("backHome1").onclick = () => show("ask");
-document.getElementById("backHome2").onclick = () => show("ask");
+    document.getElementById("backHome2").onclick = () => {
+      show("ask");
+      stopHearts();
+      startBgHearts();
+    };
 
-document.getElementById("changeMind").onclick = () => {
-  show("yes");
-  burstHearts(45);
-};
-</script>
+    document.getElementById("changeMind").onclick = () => {
+      show("yes");
+      safePlayMusic();
+      startBgHearts();
+      startHearts();
+      burstHearts(55);
+    };
 
-</body>
-</html>
-</script>
+    document.getElementById("moreHearts").onclick = () => burstHearts(45);
 
+    /* =========================
+       FOREGROUND HEARTS (over everything)
+    ========================= */
+    const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
+    let heartTimer = null;
+
+    function spawnHeart(){
+      const h = document.createElement("div");
+      h.className = "heart";
+      h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+      const left = Math.random()*100;
+      const size = 12 + Math.random()*28;
+      const drift = (Math.random()*140 - 70) + "px";
+      const duration = 4 + Math.random()*5;
+
+      h.style.left = left + "vw";
+      h.style.fontSize = size + "px";
+      h.style.setProperty("--drift", drift);
+      h.style.animationDuration = duration + "s";
+
+      document.body.appendChild(h);
+      setTimeout(()=>h.remove(), duration*1000);
+    }
+
+    function burstHearts(count=30){
+      for(let i=0;i<count;i++){
+        setTimeout(spawnHeart, i*55);
+      }
+    }
+
+    function startHearts(){
+      if(heartTimer) return;
+      heartTimer = setInterval(spawnHeart, 220);
+    }
+
+    function stopHearts(){
+      if(!heartTimer) return;
+      clearInterval(heartTimer);
+      heartTimer = null;
+    }
+
+    /* =========================
+       BACKDROP HEARTS (behind card)
+    ========================= */
+    const bgLayer = document.getElementById("bgHearts");
+    let bgTimer = null;
+
+    function spawnBgHeart(){
+      const el = document.createElement("div");
+      el.className = "bgHeart";
+      el.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+      const left = Math.random()*100;
+      const size = 10 + Math.random()*22;
+      const drift = (Math.random()*160 - 80) + "px";
+      const duration = 8 + Math.random()*10;
+
+      el.style.left = left + "vw";
+      el.style.fontSize = size + "px";
+      el.style.setProperty("--drift", drift);
+      el.style.animationDuration = duration + "s";
+
+      bgLayer.appendChild(el);
+      setTimeout(()=>el.remove(), duration*1000);
+    }
+
+    function startBgHearts(){
+      if(bgTimer) return;
+      // start with a few so it doesn’t feel empty
+      for(let i=0;i<14;i++) setTimeout(spawnBgHeart, i*120);
+      bgTimer = setInterval(spawnBgHeart, 260);
+    }
+
+    /* Start backdrop hearts immediately */
+    startBgHearts();
+  </script>
 </body>
 </html>
