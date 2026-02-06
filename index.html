@@ -31,23 +31,34 @@ body{
   overflow-y:auto;
 }
 
+/* ===== CENTERING FIX (Phone + Desktop) ===== */
 .wrap{
-  display:grid;
-  place-items:center;
-  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100svh;
   padding:24px;
+}
+
+@media (max-width: 600px){
+  .wrap{
+    align-items:flex-start;
+    padding:16px;
+    padding-top:28px;
+  }
 }
 
 .card{
   width:min(640px, 94vw);
   padding:24px 18px;
   border-radius:22px;
+  margin:0 auto;
   background: var(--glass);
   border: 1px solid var(--border);
   backdrop-filter: blur(12px);
   box-shadow: 0 20px 90px rgba(0,0,0,.35);
 
-  max-height: 92svh;
+  max-height:92svh;
   overflow:auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -64,6 +75,7 @@ p{margin:0}
   background: rgba(0,0,0,.18);
 }
 
+/* ===== NO CROP PHOTO FIX ===== */
 .media img{
   width:100%;
   height:auto;
@@ -107,6 +119,7 @@ button{
 .screen{display:none}
 .screen.active{display:block}
 
+/* ===== HEARTS ===== */
 .heart{
   position:fixed;
   top:-40px;
@@ -183,6 +196,7 @@ I can’t wait to live life with you and be happy. 💖
 </div>
 
 <script>
+/* ===== SLIDESHOW ===== */
 const slideshow = [
 "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
 "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
@@ -209,9 +223,11 @@ i=(i+1)%slideshow.length;
 askImg.src=slideshow[i];
 },3000);
 
+/* ===== GIFS ===== */
 document.getElementById("yesGif").src="https://media4.giphy.com/media/RB46T9ysjzDEs/giphy.gif";
 document.getElementById("noGif").src="https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif";
 
+/* ===== SCREEN SWITCH ===== */
 const screens={
 ask:document.getElementById("ask"),
 yes:document.getElementById("yes"),
@@ -223,6 +239,7 @@ Object.values(screens).forEach(x=>x.classList.remove("active"));
 screens[s].classList.add("active");
 }
 
+/* ===== BUTTONS ===== */
 document.getElementById("yesBtn").onclick=()=>{
 show("yes");
 burstHearts(40);
@@ -234,6 +251,7 @@ show("no");
 
 document.getElementById("moreHearts").onclick=()=>burstHearts(40);
 
+/* ===== HEARTS ===== */
 function spawnHeart(){
 const h=document.createElement("div");
 h.className="heart";
