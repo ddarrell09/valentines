@@ -19,7 +19,7 @@
     html, body{
       margin:0;
       width:100%;
-      overflow-x:hidden; /* ✅ never sideways scroll */
+      overflow-x:hidden; /* hard kill sideways scroll */
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:#fff;
     }
@@ -30,11 +30,23 @@
         radial-gradient(1200px 800px at 15% 10%, #2a1230 0%, transparent 60%),
         radial-gradient(900px 600px at 85% 30%, #1d2a55 0%, transparent 55%),
         linear-gradient(180deg, var(--bg1), var(--bg2));
-      overflow-y:auto; /* ✅ page scrolls */
+      overflow-y:auto;
     }
 
-    /* ✅ SAFE-AREA + NO-VW LAYOUT (fixes Safari right-side cut off) */
+    /* ===== BACKGROUND HEARTS LAYER ===== */
+    .bg-hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+      overflow:hidden;
+    }
+
+    /* wrapper + card above the background hearts */
     .wrap{
+      position:relative;
+      z-index:2;
+
       width:100%;
       min-height:100svh;
       display:flex;
@@ -44,26 +56,28 @@
       padding-top:28px;
       padding-bottom:24px;
 
-      /* iPhone safe-area (older + modern) */
-      padding-left: calc(16px + constant(safe-area-inset-left));
-      padding-right: calc(16px + constant(safe-area-inset-right));
-      padding-left: calc(16px + env(safe-area-inset-left));
-      padding-right: calc(16px + env(safe-area-inset-right));
+      /* ✅ symmetric padding that survives Safari weirdness */
+      padding-left: max(18px, calc(18px + env(safe-area-inset-left)));
+      padding-right:max(18px, calc(18px + env(safe-area-inset-right)));
+
+      /* older iOS fallback */
+      padding-left: max(18px, calc(18px + constant(safe-area-inset-left)));
+      padding-right:max(18px, calc(18px + constant(safe-area-inset-right)));
     }
 
     .card{
-      width:100%;          /* ✅ no vw */
+      width:100%;
       max-width:640px;
-      margin:0 auto;
-
+      margin-inline:auto;     /* ✅ true center */
       padding:22px 16px;
       border-radius:22px;
+
       background: var(--glass);
       border: 1px solid var(--border);
       backdrop-filter: blur(12px);
       box-shadow: 0 20px 90px rgba(0,0,0,.35);
 
-      overflow:hidden;     /* ✅ no inner scrollbar */
+      overflow:hidden;        /* no inner scrollbars */
       text-align:center;
     }
 
@@ -72,7 +86,7 @@
 
     .media{
       margin:14px auto 16px;
-      width:100%;          /* ✅ match card width */
+      width:100%;
       max-width:520px;
       border-radius:18px;
       overflow:hidden;
@@ -119,16 +133,29 @@
     .screen{ display:none; }
     .screen.active{ display:block; }
 
+    /* ===== FOREGROUND HEARTS (burst over everything) ===== */
     .heart{
       position:fixed;
       top:-40px;
       pointer-events:none;
-      z-index:1;
+      z-index:9999; /* OVER EVERYTHING */
       animation: fall linear forwards;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.25));
+    }
+
+    /* ===== BACKGROUND HEARTS (behind everything) ===== */
+    .bg-heart{
+      position:absolute;
+      top:-50px;
+      pointer-events:none;
+      z-index:0;
+      opacity:.22;
+      animation: fall linear forwards;
+      filter: blur(.2px);
     }
 
     @keyframes fall{
-      to{ transform: translateY(110vh); opacity:.2; }
+      to{ transform: translateY(115vh) rotate(360deg); opacity:0; }
     }
 
     .message{
@@ -151,6 +178,10 @@
 </head>
 
 <body>
+
+  <!-- background hearts container -->
+  <div class="bg-hearts" id="bgHearts"></div>
+
   <div class="wrap">
     <div class="card">
 
@@ -258,24 +289,50 @@ function show(name){
 }
 
 /* ===== HEARTS ===== */
-const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
+const heartChars = ["💗","💖","💘","💝","💞","💕","❤️","🩷","🫶"];
+const bgContainer = document.getElementById("bgHearts");
 
-function spawnHeart(){
+/* Foreground burst hearts (OVER everything) */
+function spawnHeartFG(){
   const h = document.createElement("div");
   h.className = "heart";
-  h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-  h.style.left = (Math.random() * 100) + "vw";
-  h.style.fontSize = (12 + Math.random() * 26) + "px";
-  h.style.animationDuration = (4 + Math.random() * 4) + "s";
+  h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+  h.style.left = (Math.random()*100) + "vw";
+  h.style.fontSize = (14 + Math.random()*28) + "px";
+  h.style.animationDuration = (4 + Math.random()*4) + "s";
+
   document.body.appendChild(h);
-  setTimeout(() => h.remove(), 8000);
+  setTimeout(() => h.remove(), 9000);
 }
 
-function burstHearts(count=30){
+function burstHearts(count=35){
   for(let i=0;i<count;i++){
-    setTimeout(spawnHeart, i * 60);
+    setTimeout(spawnHeartFG, i * 55);
   }
 }
+
+/* Background hearts (BEHIND everything) */
+function spawnHeartBG(){
+  const h = document.createElement("div");
+  h.className = "bg-heart";
+  h.textContent = heartChars[Math.floor(Math.random()*heartChars.length)];
+
+  // use percentages INSIDE bg container (more stable than vw on Safari)
+  h.style.left = (Math.random()*100) + "%";
+  h.style.fontSize = (10 + Math.random()*18) + "px";
+  h.style.animationDuration = (7 + Math.random()*8) + "s";
+
+  // little sideways drift using translateX
+  const drift = (Math.random()*80 - 40);
+  h.style.transform = `translateX(${drift}px)`;
+
+  bgContainer.appendChild(h);
+  setTimeout(() => h.remove(), 17000);
+}
+
+/* constant background falling hearts */
+setInterval(spawnHeartBG, 380); // adjust speed here
 
 /* ===== BUTTONS ===== */
 document.getElementById("yesBtn").onclick = () => {
