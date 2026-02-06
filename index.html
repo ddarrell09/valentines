@@ -6,179 +6,166 @@
 <title>Will you be my Valentine ❤️</title>
 
 <style>
-
 :root{
- --bg1:#0b0b14;
- --bg2:#1b0f1a;
- --glass: rgba(255,255,255,.07);
- --border: rgba(255,255,255,.14);
- --pink:#ff4d8d;
+  --bg1:#0b0b14;
+  --bg2:#1b0f1a;
+  --glass: rgba(255,255,255,.07);
+  --border: rgba(255,255,255,.14);
+  --pink:#ff4d8d;
 }
 
-*{box-sizing:border-box;}
+*{ box-sizing:border-box; }
 
-html,body{
- margin:0;
- overflow-x:hidden;
- font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
- color:white;
+html, body{
+  margin:0;
+  width:100%;
+  overflow-x:hidden; /* ✅ never sideways scroll */
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color:#fff;
 }
 
-/* Background */
 body{
- background:
- radial-gradient(1200px 800px at 15% 10%, #2a1230 0%, transparent 60%),
- radial-gradient(900px 600px at 85% 30%, #1d2a55 0%, transparent 55%),
- linear-gradient(180deg, var(--bg1), var(--bg2));
+  min-height:100vh;
+  background:
+    radial-gradient(1200px 800px at 15% 10%, #2a1230 0%, transparent 60%),
+    radial-gradient(900px 600px at 85% 30%, #1d2a55 0%, transparent 55%),
+    linear-gradient(180deg, var(--bg1), var(--bg2));
+  overflow-y:auto; /* ✅ page scrolls, not the card */
 }
 
-/* Layout wrapper */
 .wrap{
- display:flex;
- justify-content:center;
- align-items:center;
- min-height:100svh;
- padding:24px;
+  width:100%;
+  min-height:100svh;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:24px;
+  padding-top:28px;
 }
 
-/* Card */
 .card{
- width:min(640px,94vw);
- margin:0 auto;
- padding:24px 18px;
- border-radius:22px;
- background:var(--glass);
- border:1px solid var(--border);
- backdrop-filter:blur(12px);
- box-shadow:0 20px 90px rgba(0,0,0,.35);
+  width:min(640px, 94vw);
+  margin:0 auto;
+  padding:22px 16px;
+  border-radius:22px;
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 20px 90px rgba(0,0,0,.35);
 
- overflow-y:auto;
- overflow-x:hidden;
- max-height:92svh;
-
- text-align:center;
+  overflow:hidden;       /* ✅ no inner scrollbar */
+  text-align:center;     /* ✅ centers title + hey line */
 }
 
-/* Media image container */
+h1{ margin:0 0 10px; font-size:clamp(24px, 5vw, 40px); }
+p{ margin:0; line-height:1.5; }
+
 .media{
- margin:14px auto;
- width:min(520px,92vw);
- border-radius:18px;
- overflow:hidden;
- border:1px solid rgba(255,255,255,.12);
- background:rgba(0,0,0,.2);
+  margin:14px auto 16px;
+  width:min(520px, 92vw);
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.18);
 }
 
 .media img{
- width:100%;
- height:auto;
- max-height:70vh;
- object-fit:contain;
- display:block;
+  width:100%;
+  height:auto;
+  max-height:65vh;     /* ✅ fits on phone */
+  object-fit:contain;  /* ✅ no cropping */
+  display:block;
+  background: rgba(0,0,0,.25);
 }
 
-/* Buttons */
 .btns{
- display:flex;
- justify-content:center;
- gap:12px;
- margin-top:16px;
- flex-wrap:wrap;
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:16px;
 }
 
 button{
- border:none;
- padding:12px 18px;
- border-radius:999px;
- font-weight:800;
- cursor:pointer;
+  border:none;
+  cursor:pointer;
+  padding:12px 18px;
+  border-radius:999px;
+  font-weight:800;
 }
 
 .yes{
- background:linear-gradient(90deg,#ff3d7f,#ff7ab6);
- color:#1b0f1a;
+  background: linear-gradient(90deg, #ff3d7f, #ff7ab6);
+  color:#1b0f1a;
 }
 
 .no{
- background:rgba(255,255,255,.1);
- border:1px solid rgba(255,255,255,.2);
- color:white;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;
 }
 
-/* Screens */
-.screen{display:none;}
-.screen.active{display:block;}
+.screen{ display:none; }
+.screen.active{ display:block; }
 
-/* Hearts */
 .heart{
- position:fixed;
- top:-40px;
- animation: fall linear forwards;
- pointer-events:none;
+  position:fixed;
+  top:-40px;
+  pointer-events:none;
+  z-index:1;
+  animation: fall linear forwards;
 }
 
 @keyframes fall{
- to{ transform:translateY(110vh); opacity:.2; }
+  to{ transform: translateY(110vh); opacity:.2; }
 }
 
-/* Message */
 .message{
- margin-top:14px;
- padding:14px;
- border-radius:16px;
- background:rgba(0,0,0,.25);
- border:1px solid rgba(255,255,255,.1);
- white-space:pre-line;
+  margin-top:14px;
+  padding:14px;
+  border-radius:16px;
+  background: rgba(0,0,0,.22);
+  border:1px solid rgba(255,255,255,.12);
+  white-space:pre-line;
+  text-align:left; /* message reads nicer left aligned */
 }
 
-/* 📱 PHONE POLISH (Zoom out + center) */
 @media (max-width:600px){
-
- .card{
-  transform:scale(.95);
-  transform-origin: top center;
- }
-
- h1{font-size:24px;}
- p{font-size:15px;}
- button{font-size:14px;padding:10px 16px;}
-
- .media img{
-  max-height:60vh;
- }
-
+  .wrap{ padding:16px; padding-top:22px; }
+  .card{ padding:18px 14px; }
+  button{ font-size:14px; padding:10px 16px; }
+  .media img{ max-height:60vh; }
 }
-
 </style>
 </head>
 
 <body>
-
 <div class="wrap">
-<div class="card">
+  <div class="card">
 
-<section id="ask" class="screen active">
-<h1>Will you be my Valentine? 💌</h1>
-<p>Hey <span style="color:#ff4d8d;font-weight:bold;">Shella</span>, I made this for you.</p>
+    <section id="ask" class="screen active">
+      <h1>Will you be my Valentine? 💌</h1>
+      <p>Hey <span style="color:var(--pink);font-weight:900;">Shella</span>, I made this for you.</p>
 
-<div class="media">
-<img id="slideshowAsk">
-</div>
+      <div class="media">
+        <img id="slideshowAsk" alt="Photos of us">
+      </div>
 
-<div class="btns">
-<button class="yes" id="yesBtn">Yes ❤️</button>
-<button class="no" id="noBtn">No 😭</button>
-</div>
-</section>
+      <div class="btns">
+        <button class="yes" id="yesBtn">Yes ❤️</button>
+        <button class="no" id="noBtn">No 😭</button>
+      </div>
+    </section>
 
-<section id="yes" class="screen">
-<h1>YAYYYYY 💖</h1>
+    <section id="yes" class="screen">
+      <h1>YAYYYYY 💖</h1>
+      <p>YESSSS 😭❤️</p>
 
-<div class="media">
-<img id="yesGif">
-</div>
+      <div class="media">
+        <img id="yesGif" alt="Happy gif">
+      </div>
 
-<div class="message">
+      <div class="message">
 Shella, I love you so much.
 I’m really thankful for you.
 
@@ -187,99 +174,139 @@ I’ve been trying my hardest to keep up and it’s been hard, but you’ve stil
 This is a hard time for me with everything going on, but you make it feel lighter just by being you.
 
 I can’t wait to live life with you and be happy. 💖
-</div>
+      </div>
 
-<div class="btns">
-<button class="yes" id="moreHearts">More hearts</button>
-</div>
-</section>
+      <div class="btns">
+        <button class="yes" id="moreHearts">More hearts</button>
+        <button class="no" id="backHome1">Back</button>
+      </div>
+    </section>
 
-<section id="no" class="screen">
-<h1>Dang… 🥲</h1>
+    <section id="no" class="screen">
+      <h1>Dang… 🥲</h1>
+      <p>I’m gonna go cry real quick.</p>
 
-<div class="media">
-<img id="noGif">
-</div>
-</section>
+      <div class="media">
+        <img id="noGif" alt="Sad gif">
+      </div>
 
-</div>
+      <div class="btns">
+        <button class="yes" id="changeMind">Okay okay… YES ❤️</button>
+        <button class="no" id="backHome2">Back</button>
+      </div>
+    </section>
+
+  </div>
 </div>
 
 <script>
-
-/* SLIDESHOW */
-const photos=[
-"17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
-"9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
-"DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
-"DSCF0006.jpeg",
-"DSCF0007.jpeg",
-"IMG_0233.jpeg",
-"IMG_0411.jpeg",
-"IMG_0418.jpeg",
-"IMG_0420.jpeg",
-"IMG_4002.jpeg",
-"IMG_4288.jpeg",
-"IMG_5482.jpeg",
-"IMG_6404.jpeg",
-"IMG_9470.jpeg"
+/* ===== SLIDESHOW (your uploaded images) ===== */
+const photos = [
+  "17503EC1-5ADC-4A76-B94A-68E07BB33A02.jpeg",
+  "9325070F-2DEF-4452-9E9E-52F35D24A94A.jpeg",
+  "DEF3A7C1-335A-45B3-8A2F-AB042E139543.jpeg",
+  "DSCF0006.jpeg",
+  "DSCF0007.jpeg",
+  "IMG_0233.jpeg",
+  "IMG_0411.jpeg",
+  "IMG_0418.jpeg",
+  "IMG_0420.jpeg",
+  "IMG_4002.jpeg",
+  "IMG_4288.jpeg",
+  "IMG_5482.jpeg",
+  "IMG_6404.jpeg",
+  "IMG_9470.jpeg"
 ];
 
-let index=0;
-const slide=document.getElementById("slideshowAsk");
-slide.src=photos[0];
+const slideEl = document.getElementById("slideshowAsk");
+let slideIndex = 0;
+slideEl.src = photos[0];
 
-setInterval(()=>{
- index=(index+1)%photos.length;
- slide.src=photos[index];
-},3000);
+setInterval(() => {
+  slideIndex = (slideIndex + 1) % photos.length;
+  slideEl.src = photos[slideIndex];
+}, 3000);
 
-/* GIFS */
-document.getElementById("yesGif").src="https://media4.giphy.com/media/RB46T9ysjzDEs/giphy.gif";
-document.getElementById("noGif").src="https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif";
+/* ===== GIFS ===== */
+document.getElementById("yesGif").src =
+  "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnZhN3owcGVjZzg5ZGtvNmJmanhtMG9vMXFkZ29uZjc4NXZxNjd2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/RB46T9ysjzDEs/giphy.gif";
 
-/* Screens */
-const screens={
- ask:document.getElementById("ask"),
- yes:document.getElementById("yes"),
- no:document.getElementById("no")
+document.getElementById("noGif").src =
+  "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif";
+
+/* ===== SCREEN SWITCH ===== */
+const screens = {
+  ask: document.getElementById("ask"),
+  yes: document.getElementById("yes"),
+  no: document.getElementById("no")
 };
 
-function show(s){
- Object.values(screens).forEach(x=>x.classList.remove("active"));
- screens[s].classList.add("active");
+function show(name){
+  Object.values(screens).forEach(s => s.classList.remove("active"));
+  screens[name].classList.add("active");
 }
 
-/* Buttons */
-document.getElementById("yesBtn").onclick=()=>{
- show("yes");
- burstHearts(40);
-};
+/* ===== HEARTS ===== */
+let heartTimer = null;
+const heartChars = ["💗","💖","💘","💝","💞","💕","❤️"];
 
-document.getElementById("noBtn").onclick=()=>{
- show("no");
-};
-
-document.getElementById("moreHearts").onclick=()=>burstHearts(40);
-
-/* Hearts */
 function spawnHeart(){
- const h=document.createElement("div");
- h.className="heart";
- h.textContent="❤️";
- h.style.left=Math.random()*100+"vw";
- h.style.fontSize=(12+Math.random()*24)+"px";
- h.style.animationDuration=(4+Math.random()*3)+"s";
- document.body.appendChild(h);
- setTimeout(()=>h.remove(),6000);
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+  h.style.left = (Math.random() * 100) + "vw";
+  h.style.fontSize = (12 + Math.random() * 26) + "px";
+  h.style.animationDuration = (4 + Math.random() * 4) + "s";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 8000);
 }
 
-function burstHearts(n){
- for(let i=0;i<n;i++){
-  setTimeout(spawnHeart,i*60);
- }
+function burstHearts(count=30){
+  for(let i=0;i<count;i++){
+    setTimeout(spawnHeart, i * 60);
+  }
 }
 
+function startHearts(){
+  if(heartTimer) return;
+  heartTimer = setInterval(spawnHeart, 180);
+}
+
+function stopHearts(){
+  if(!heartTimer) return;
+  clearInterval(heartTimer);
+  heartTimer = null;
+}
+
+/* ===== BUTTONS ===== */
+document.getElementById("yesBtn").onclick = () => {
+  show("yes");
+  startHearts();
+  burstHearts(45);
+};
+
+document.getElementById("noBtn").onclick = () => {
+  show("no");
+  stopHearts();
+};
+
+document.getElementById("moreHearts").onclick = () => burstHearts(40);
+
+document.getElementById("backHome1").onclick = () => {
+  show("ask");
+  stopHearts();
+};
+
+document.getElementById("backHome2").onclick = () => {
+  show("ask");
+  stopHearts();
+};
+
+document.getElementById("changeMind").onclick = () => {
+  show("yes");
+  startHearts();
+  burstHearts(45);
+};
 </script>
 
 </body>
